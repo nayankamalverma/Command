@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Command.Commands
 {
-    public class ThiedEyeCommand: UnitCommand
+    public class ThirdEyeCommand: UnitCommand
     {
         private bool willHitTarget;
 
-        public ThiedEyeCommand(CommandData commandData)
+        public ThirdEyeCommand(CommandData commandData)
         {
             this.commandData = commandData;
             willHitTarget = WillHitTarget();
