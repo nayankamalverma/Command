@@ -1,3 +1,5 @@
+using Command.Commands;
+using Command.Player;
 using UnityEngine;
 
 namespace Command.Utilities
@@ -18,5 +20,7 @@ namespace Command.Utilities
                 Destroy(gameObject);
             }
         }
+
+        public void ProcessUnitCommand(ICommand commandToProcess) => PlayerService.ProcessUnitCommand(commandToProcess as UnitCommand);
     }
 }
