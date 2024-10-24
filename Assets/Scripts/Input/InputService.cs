@@ -25,15 +25,15 @@ namespace Command.Input
 
         public void UpdateInputService()
         {
-            if(currentState == InputState.SELECTING_TARGET)
+            if (currentState == InputState.SELECTING_TARGET)
                 mouseInputHandler.HandleTargetSelection(targetType);
         }
 
-        public void OnActionSelected(CommandType selectedCommandType)
+        public void OnActionSelected(CommandType selectedActionType)
         {
-            this.selectedCommandType = selectedCommandType;
+            this.selectedCommandType = selectedActionType;
             SetInputState(InputState.SELECTING_TARGET);
-            TargetType targetType = SetTargetType(selectedCommandType);
+            TargetType targetType = SetTargetType(selectedActionType);
             ShowTargetSelectionUI(targetType);
         }
 
@@ -48,30 +48,15 @@ namespace Command.Input
         public void OnTargetSelected(UnitController targetUnit)
         {
             SetInputState(InputState.EXECUTING_INPUT);
-
             UnitCommand commandToProcess = CreateUnitCommand(targetUnit);
-
             GameService.Instance.ProcessUnitCommand(commandToProcess);
-        }
-
-        private CommandData CreateCommandData(UnitController targetUnit)
-        {
-            // Create CommandData with the necessary information for a UnitCommand.
-            // It includes the ActiveUnit's ID, TargetUnit's ID, ActivePlayer's ID, and the TargetPlayer's ID.
-            return new CommandData(
-                GameService.Instance.PlayerService.ActiveUnitID,
-                targetUnit.UnitID,
-                GameService.Instance.PlayerService.ActivePlayerID,
-                targetUnit.Owner.PlayerID
-            );
         }
 
         private UnitCommand CreateUnitCommand(UnitController targetUnit)
         {
-            // Create the necessary CommandData based on the target unit.
+
             CommandData commandData = CreateCommandData(targetUnit);
 
-            // Based on the selected command type, create and return the corresponding UnitCommand.
             switch (selectedCommandType)
             {
                 case CommandType.Attack:
@@ -89,9 +74,16 @@ namespace Command.Input
                 case CommandType.ThirdEye:
                     return new ThirdEyeCommand(commandData);
                 default:
-                    // If the selectedCommandType is not recognized, throw an exception.
                     throw new System.Exception($"No Command found of type: {selectedCommandType}");
             }
+        }
+
+        private CommandData CreateCommandData(UnitController targetUnit)
+        {
+            return new CommandData(GameService.Instance.PlayerService.ActiveUnitID,
+                                   targetUnit.UnitID,
+                                   GameService.Instance.PlayerService.ActivePlayerID,
+                                   targetUnit.Owner.PlayerID);
         }
     }
 }

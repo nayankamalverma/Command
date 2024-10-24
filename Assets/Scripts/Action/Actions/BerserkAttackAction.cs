@@ -1,15 +1,17 @@
 using Command.Input;
-using Command.Main;
 using Command.Player;
+using Command.Main;
 using UnityEngine;
+using Command.Commands;
 
 namespace Command.Actions
 {
-    public class BerserkAttackAction : IAction
+    public class CleanseAction : IAction
     {
         private UnitController actorUnit;
         private UnitController targetUnit;
         private bool isSuccessful;
+
         public TargetType TargetType => TargetType.Enemy;
 
         public void PerformAction(UnitController actorUnit, UnitController targetUnit, bool isSuccessful)
@@ -18,20 +20,17 @@ namespace Command.Actions
             this.targetUnit = targetUnit;
             this.isSuccessful = isSuccessful;
 
-            actorUnit.PlayBattleAnimation(Commands.CommandType.BerserkAttack, CalculateMovePosition(targetUnit), OnActionAnimationCompleted);
+            actorUnit.PlayBattleAnimation(CommandType.Cleanse, CalculateMovePosition(targetUnit), OnActionAnimationCompleted);
         }
 
         public void OnActionAnimationCompleted()
         {
-            GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.BERSERK_ATTACK);
+            GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.CLEANSE);
 
             if (isSuccessful)
-                targetUnit.TakeDamage(actorUnit.CurrentPower * 2);
+                targetUnit.ResetStats();
             else
-            {
-                actorUnit.TakeDamage(actorUnit.CurrentPower * 2);
-                Debug.Log("actor unit must be hit now.");
-            }
+                GameService.Instance.UIService.ActionMissed();
         }
 
         public Vector3 CalculateMovePosition(UnitController targetUnit) => targetUnit.GetEnemyPosition();
