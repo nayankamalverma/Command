@@ -1,6 +1,7 @@
 using Command.Player;
 using Command.Input;
 using Command.Main;
+using Command.Commands;
 using UnityEngine;
 
 namespace Command.Actions
@@ -18,7 +19,7 @@ namespace Command.Actions
             this.targetUnit = targetUnit;
             this.isSuccessful = isSuccessful;
 
-            actorUnit.PlayBattleAnimation(Commands.CommandType.AttackStance, CalculateMovePosition(targetUnit), OnActionAnimationCompleted);
+            actorUnit.PlayBattleAnimation(CommandType.AttackStance, CalculateMovePosition(targetUnit), OnActionAnimationCompleted);
         }
 
         public void OnActionAnimationCompleted()
@@ -30,7 +31,6 @@ namespace Command.Actions
             else
                 GameService.Instance.UIService.ActionMissed();
         }
-
 
         public Vector3 CalculateMovePosition(UnitController targetUnit) => targetUnit.GetEnemyPosition();
     }
